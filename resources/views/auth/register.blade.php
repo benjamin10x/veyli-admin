@@ -37,16 +37,24 @@
                     </div>
                 </div>
 
+                @if (session('error'))
+                    <div style="margin-bottom: 16px; background:#fee2e2; color:#991b1b; padding:12px 14px; border-radius:12px;">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
                 <form class="login-form" method="POST" action="{{ route('register') }}">
                     @csrf
                     <div class="form-group">
                         <label class="form-label">Nombre completo</label>
-                        <input type="text" class="form-input" name="name" placeholder="Nombre completo" required>
+                        <input type="text" class="form-input" name="name" placeholder="Nombre completo" value="{{ old('name') }}" required>
+                        @error('name') <div style="color:#b91c1c; font-size:12px; margin-top:6px;">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Correo electrónico</label>
-                        <input type="email" class="form-input" name="email" placeholder="Correo electrónico" required>
+                        <input type="email" class="form-input" name="email" placeholder="Correo electrónico" value="{{ old('email') }}" required>
+                        @error('email') <div style="color:#b91c1c; font-size:12px; margin-top:6px;">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="form-group">
@@ -60,6 +68,7 @@
                                 </svg>
                             </button>
                         </div>
+                        @error('password') <div style="color:#b91c1c; font-size:12px; margin-top:6px;">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="form-group">
@@ -75,22 +84,9 @@
                         </div>
                     </div>
 
-                    <div class="form-divider">Configuración de acceso</div>
-
-                    <div class="form-group">
-                        <label class="form-label">Rol asignado</label>
-                        <div class="form-select-wrapper">
-                            <select class="form-select" name="role">
-                                <option value="">Selecciona un rol</option>
-                                <option value="admin">Administrador</option>
-                                <option value="operador">Operador</option>
-                                <option value="cliente">Cliente</option>
-                                <option value="conductor">Conductor</option>
-                            </select>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="form-select-arrow">
-                                <polyline points="6 9 12 15 18 9"></polyline>
-                            </svg>
-                        </div>
+                    <div class="form-divider">Cuenta de cliente</div>
+                    <div class="form-footer-text" style="text-align:left; margin-top:-8px;">
+                        El registro público crea cuentas con rol <strong>cliente</strong> por defecto.
                     </div>
 
                     <div class="form-footer">
@@ -105,7 +101,7 @@
                                 <line x1="20" y1="8" x2="20" y2="14"></line>
                                 <line x1="23" y1="11" x2="17" y2="11"></line>
                             </svg>
-                            Crear cuenta
+                            Crear cuenta cliente
                         </button>
 
                         <p class="form-footer-link">

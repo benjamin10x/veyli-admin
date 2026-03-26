@@ -37,11 +37,24 @@
                     </div>
                 </div>
 
+                @if (session('error'))
+                    <div style="margin-bottom: 16px; background:#fee2e2; color:#991b1b; padding:12px 14px; border-radius:12px;">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                @if (session('success'))
+                    <div style="margin-bottom: 16px; background:#dcfce7; color:#166534; padding:12px 14px; border-radius:12px;">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
                 <form class="login-form" method="POST" action="{{ route('login') }}">
                     @csrf
                     <div class="form-group">
                         <label class="form-label">Correo electrónico</label>
-                        <input type="email" class="form-input" name="email" placeholder="Correo electrónico" required>
+                        <input type="email" class="form-input" name="email" placeholder="Correo electrónico" value="{{ old('email') }}" required>
+                        @error('email') <div style="color:#b91c1c; font-size:12px; margin-top:6px;">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="form-group">
@@ -55,6 +68,7 @@
                                 </svg>
                             </button>
                         </div>
+                        @error('password') <div style="color:#b91c1c; font-size:12px; margin-top:6px;">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="form-footer">
@@ -64,7 +78,7 @@
                                 <span class="checkbox-mark"></span>
                                 Recordarme
                             </label>
-                            <a href="#" class="forgot-password-link">¿Olvidaste tu contraseña?</a>
+                            <span class="forgot-password-link">Sesión centralizada vía FastAPI</span>
                         </div>
 
                         <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">

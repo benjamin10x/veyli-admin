@@ -1,4 +1,8 @@
 <aside class="sidebar" id="sidebar">
+    @php
+        $grantedPermissions = $apiPermissions ?? [];
+        $can = fn (string $permission) => in_array('*', $grantedPermissions, true) || in_array($permission, $grantedPermissions, true);
+    @endphp
     <div class="sidebar-header">
         <a href="{{ route('dashboard') }}" class="sidebar-logo">
             <img src="{{ asset('assets/images/logo.png') }}" alt="VEYLI Logo">
@@ -10,26 +14,30 @@
         <div class="nav-section">
             <span class="nav-section-title">Principal</span>
             <ul class="nav-list">
-                <li class="nav-item">
-                    <a href="{{ route('dashboard') }}"
-                       class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                        <i class="nav-icon">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="3" width="7" height="7"></rect>
-                                <rect x="14" y="3" width="7" height="7"></rect>
-                                <rect x="14" y="14" width="7" height="7"></rect>
-                                <rect x="3" y="14" width="7" height="7"></rect>
-                            </svg>
-                        </i>
-                        <span class="nav-text">Dashboard</span>
-                    </a>
-                </li>
+                @if ($can('dashboard.view'))
+                    <li class="nav-item">
+                        <a href="{{ route('dashboard') }}"
+                           class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                            <i class="nav-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="14" width="7" height="7"></rect>
+                                    <rect x="3" y="14" width="7" height="7"></rect>
+                                </svg>
+                            </i>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                @endif
             </ul>
         </div>
 
+        @if ($can('users.view') || $can('roles.view') || $can('clients.view'))
         <div class="nav-section">
             <span class="nav-section-title">Usuarios y Acceso</span>
             <ul class="nav-list">
+                @if ($can('users.view'))
                 <li class="nav-item">
                     <a href="{{ route('usuarios.index') }}"
                        class="nav-link {{ request()->routeIs('usuarios.*') ? 'active' : '' }}">
@@ -47,7 +55,9 @@
                         </i>
                     </a>
                 </li>
+                @endif
 
+                @if ($can('roles.view'))
                 <li class="nav-item">
                     <a href="{{ route('roles.index') }}"
                        class="nav-link {{ request()->routeIs('roles.*') ? 'active' : '' }}">
@@ -64,7 +74,9 @@
                         </i>
                     </a>
                 </li>
+                @endif
 
+                @if ($can('clients.view'))
                 <li class="nav-item">
                     <a href="{{ route('clientes.index') }}"
                        class="nav-link {{ request()->routeIs('clientes.*') ? 'active' : '' }}">
@@ -84,12 +96,16 @@
                         </i>
                     </a>
                 </li>
+                @endif
             </ul>
         </div>
+        @endif
 
+        @if ($can('drivers.view') || $can('vehicles.view') || $can('packages.view') || $can('package_statuses.view') || $can('assignments.view') || $can('routes.view'))
         <div class="nav-section">
             <span class="nav-section-title">Operaciones</span>
             <ul class="nav-list">
+                @if ($can('drivers.view'))
                 <li class="nav-item">
                     <a href="{{ route('conductores.index') }}"
                        class="nav-link {{ request()->routeIs('conductores.*') ? 'active' : '' }}">
@@ -109,7 +125,9 @@
                         </i>
                     </a>
                 </li>
+                @endif
 
+                @if ($can('vehicles.view'))
                 <li class="nav-item">
                     <a href="{{ route('vehiculos.index') }}"
                        class="nav-link {{ request()->routeIs('vehiculos.*') ? 'active' : '' }}">
@@ -129,7 +147,9 @@
                         </i>
                     </a>
                 </li>
+                @endif
 
+                @if ($can('packages.view'))
                 <li class="nav-item">
                     <a href="{{ route('envios.index') }}"
                        class="nav-link {{ request()->routeIs('envios.index') ? 'active' : '' }}">
@@ -148,7 +168,9 @@
                         </i>
                     </a>
                 </li>
+                @endif
 
+                @if ($can('package_statuses.view'))
                 <li class="nav-item">
                     <a href="{{ route('estados.index') }}"
                        class="nav-link {{ request()->routeIs('estados.*') ? 'active' : '' }}">
@@ -167,10 +189,12 @@
                         </i>
                     </a>
                 </li>
+                @endif
 
+                @if ($can('assignments.view'))
                 <li class="nav-item">
-                    <a href="{{ route('rutas.asignar') }}"
-                       class="nav-link {{ request()->routeIs('rutas.asignar') ? 'active' : '' }}">
+                    <a href="{{ route('asignaciones.index') }}"
+                       class="nav-link {{ request()->routeIs('asignaciones.*') ? 'active' : '' }}">
                         <i class="nav-icon">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -187,7 +211,9 @@
                         </i>
                     </a>
                 </li>
+                @endif
 
+                @if ($can('routes.view'))
                 <li class="nav-item">
                     <a href="{{ route('rutas.index') }}"
                        class="nav-link {{ request()->routeIs('rutas.index') ? 'active' : '' }}">
@@ -206,12 +232,16 @@
                         </i>
                     </a>
                 </li>
+                @endif
             </ul>
         </div>
+        @endif
 
+        @if ($can('reports.view') || $can('settings.view'))
         <div class="nav-section">
             <span class="nav-section-title">Reportes</span>
             <ul class="nav-list">
+                @if ($can('reports.view'))
                 <li class="nav-item">
                     <a href="{{ route('reportes.index') }}"
                        class="nav-link {{ request()->routeIs('reportes.*') ? 'active' : '' }}">
@@ -230,7 +260,9 @@
                         </i>
                     </a>
                 </li>
+                @endif
 
+                @if ($can('settings.view'))
                 <li class="nav-item">
                     <a href="{{ route('configuracion.index') }}"
                        class="nav-link {{ request()->routeIs('configuracion.*') ? 'active' : '' }}">
@@ -248,21 +280,26 @@
                         </i>
                     </a>
                 </li>
+                @endif
             </ul>
         </div>
+        @endif
     </nav>
 
     <div class="sidebar-footer">
-        <a href="{{ route('login') }}" class="logout-link">
-            <i class="logout-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                    <polyline points="16 17 21 12 16 7"></polyline>
-                    <line x1="21" y1="12" x2="9" y2="12"></line>
-                </svg>
-            </i>
-            <span>Cerrar sesión</span>
-        </a>
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="logout-link" style="width:100%; background:transparent; border:0; text-align:left;">
+                <i class="logout-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </i>
+                <span>Cerrar sesión</span>
+            </button>
+        </form>
     </div>
 </aside>
 

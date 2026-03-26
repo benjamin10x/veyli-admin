@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'fastapi' => [
+        'url' => env('API_BASE_URL', 'http://localhost:8001/api/v1'),
+        'timeout' => env('API_TIMEOUT', 15),
+    ],
+
 ];

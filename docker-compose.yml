@@ -10,8 +10,11 @@ services:
       - .:/var/www
     ports:
       - "8088:8000"
-    depends_on:
-      - mysql
+    environment:
+      API_BASE_URL: ${API_BASE_URL:-http://host.docker.internal:8001/api/v1}
+      API_TIMEOUT: ${API_TIMEOUT:-15}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   node:
     image: node:20
@@ -25,20 +28,3 @@ services:
     command: sh -c "npm install && npm run dev"
     depends_on:
       - app
-
-  mysql:
-    image: mysql:8.0
-    container_name: veyli_mysql
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: veyli_db
-      MYSQL_USER: veyli_user
-      MYSQL_PASSWORD: 'getallover?45q+*'
-      MYSQL_ROOT_PASSWORD: rootpass
-    ports:
-      - "3307:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-
-volumes:
-  mysql_data:

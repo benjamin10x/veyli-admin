@@ -1,6 +1,8 @@
 *.log
 .DS_Store
 .env
+.env.local
+.env.testing
 .env.backup
 .env.production
 .phpactor.json
@@ -16,6 +18,13 @@
 /public/build
 /public/hot
 /public/storage
+/bootstrap/cache/*.php
+/bootstrap/cache/*.json
+/storage/framework/cache/data
+/storage/framework/sessions
+/storage/framework/testing
+/storage/framework/views
+/storage/logs
 /storage/*.key
 /storage/pail
 /vendor
