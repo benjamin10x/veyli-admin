@@ -47,9 +47,9 @@ class UsersPage extends BaseResourcePage
     protected function rules(): array
     {
         return [
-            'form.name' => ['required', 'string', 'max:150'],
+            'form.name' => ['required', 'string', 'min:2', 'max:150'],
             'form.email' => ['required', 'email'],
-            'form.password' => [$this->editing ? 'nullable' : 'required', 'string', 'min:8'],
+            'form.password' => [$this->editing ? 'nullable' : 'required', 'string', 'min:8', 'max:128'],
             'form.role_id' => ['required', 'integer'],
             'form.state' => ['required', 'in:active,inactive'],
         ];

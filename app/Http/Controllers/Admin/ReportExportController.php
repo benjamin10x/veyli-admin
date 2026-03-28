@@ -12,11 +12,22 @@ class ReportExportController extends Controller
 {
     public function __invoke(Request $request, string $format, ReportsApiService $reports): Response
     {
-        $validated = $request->validate([
-            'start_date' => ['required', 'date'],
-            'end_date' => ['required', 'date'],
-            'report_type' => ['nullable', 'string', 'max:50'],
-        ]);
+        $validated = $request->validate(
+            [
+                'start_date' => ['required', 'date'],
+                'end_date' => ['required', 'date', 'after_or_equal:start_date'],
+                'report_type' => ['nullable', 'string', 'max:50'],
+            ],
+            [
+                ...$this->validationMessages(),
+                'end_date.after_or_equal' => 'La fecha final debe ser igual o posterior a la fecha inicial.',
+            ],
+            $this->validationAttributes([
+                'start_date' => 'Fecha inicial',
+                'end_date' => 'Fecha final',
+                'report_type' => 'Tipo de reporte',
+            ]),
+        );
 
         $query = [
             'start_date' => $validated['start_date'],

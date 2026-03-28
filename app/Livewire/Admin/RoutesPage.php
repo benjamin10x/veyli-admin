@@ -45,10 +45,16 @@ class RoutesPage extends BaseResourcePage
 
     protected function rules(): array
     {
+        $departureDateRules = ['required', 'date'];
+
+        if (! $this->editing) {
+            $departureDateRules[] = 'after_or_equal:today';
+        }
+
         return [
-            'form.zone' => ['required', 'string', 'max:120'],
-            'form.departure_date' => ['required', 'date'],
-            'form.departure_time' => ['required'],
+            'form.zone' => ['required', 'string', 'min:2', 'max:120'],
+            'form.departure_date' => $departureDateRules,
+            'form.departure_time' => ['required', 'date_format:H:i'],
             'form.estimated_time_minutes' => ['required', 'numeric', 'min:1'],
             'form.route_status' => ['required', 'in:scheduled,active,completed,inactive'],
         ];

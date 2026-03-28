@@ -26,10 +26,17 @@ class SettingsController extends Controller
 
     public function updateProfile(Request $request, AuthApiService $auth)
     {
-        $payload = $request->validate([
-            'name' => ['required', 'string', 'max:150'],
-            'email' => ['required', 'email'],
-        ]);
+        $payload = $request->validate(
+            [
+                'name' => ['required', 'string', 'min:2', 'max:150'],
+                'email' => ['required', 'email'],
+            ],
+            $this->validationMessages(),
+            $this->validationAttributes([
+                'name' => 'Nombre',
+                'email' => 'Correo electrónico',
+            ]),
+        );
 
         try {
             $response = $auth->updateProfile($payload);
@@ -45,14 +52,25 @@ class SettingsController extends Controller
 
     public function updateSystem(Request $request, SettingsApiService $settings)
     {
-        $payload = $request->validate([
-            'company_name' => ['required', 'string', 'max:150'],
-            'support_email' => ['nullable', 'email'],
-            'support_phone' => ['nullable', 'string', 'max:50'],
-            'session_timeout_minutes' => ['required', 'integer', 'min:15', 'max:1440'],
-            'client_registration_enabled' => ['nullable', 'boolean'],
-            'maintenance_mode' => ['nullable', 'boolean'],
-        ]);
+        $payload = $request->validate(
+            [
+                'company_name' => ['required', 'string', 'min:2', 'max:150'],
+                'support_email' => ['nullable', 'email'],
+                'support_phone' => ['nullable', 'string', 'max:50'],
+                'session_timeout_minutes' => ['required', 'integer', 'min:15', 'max:1440'],
+                'client_registration_enabled' => ['nullable', 'boolean'],
+                'maintenance_mode' => ['nullable', 'boolean'],
+            ],
+            $this->validationMessages(),
+            $this->validationAttributes([
+                'company_name' => 'Nombre de la empresa',
+                'support_email' => 'Correo de soporte',
+                'support_phone' => 'Teléfono de soporte',
+                'session_timeout_minutes' => 'Tiempo de sesión',
+                'client_registration_enabled' => 'Registro de clientes',
+                'maintenance_mode' => 'Modo mantenimiento',
+            ]),
+        );
 
         $payload['client_registration_enabled'] = $request->boolean('client_registration_enabled');
         $payload['maintenance_mode'] = $request->boolean('maintenance_mode');

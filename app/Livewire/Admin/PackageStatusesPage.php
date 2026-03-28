@@ -44,8 +44,8 @@ class PackageStatusesPage extends BaseResourcePage
     protected function rules(): array
     {
         return [
-            'form.name' => ['required', 'string', 'max:100'],
-            'form.color' => ['required', 'string', 'max:20'],
+            'form.name' => ['required', 'string', 'min:2', 'max:100'],
+            'form.color' => ['required', 'string', 'min:4', 'max:20'],
             'form.description' => ['nullable', 'string', 'max:255'],
             'form.state' => ['required', 'in:active,inactive'],
         ];

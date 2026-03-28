@@ -27,15 +27,6 @@ class RolesPage extends BaseResourcePage
             ['key' => 'name', 'label' => 'Nombre', 'type' => 'text', 'nullable' => false],
             ['key' => 'description', 'label' => 'Descripción', 'type' => 'textarea', 'nullable' => true, 'full_width' => true],
             [
-                'key' => 'permissions',
-                'label' => 'Permisos de acceso',
-                'type' => 'checkbox-group',
-                'default' => [],
-                'nullable' => false,
-                'full_width' => true,
-                'wrapper_class' => 'permissions-layout-span',
-            ],
-            [
                 'key' => 'state',
                 'label' => 'Estado del rol',
                 'type' => 'switch',
@@ -54,7 +45,6 @@ class RolesPage extends BaseResourcePage
         return [
             ['label' => 'Nombre', 'key' => 'name'],
             ['label' => 'Descripción', 'key' => 'description'],
-            ['label' => 'Permisos', 'key' => 'permissions', 'type' => 'list'],
             ['label' => 'Estado', 'key' => 'state', 'type' => 'badge'],
             ['label' => 'Actualizado', 'key' => 'updated_at', 'type' => 'datetime'],
         ];
@@ -63,9 +53,8 @@ class RolesPage extends BaseResourcePage
     protected function rules(): array
     {
         return [
-            'form.name' => ['required', 'string', 'max:50'],
+            'form.name' => ['required', 'string', 'min:2', 'max:50'],
             'form.description' => ['nullable', 'string', 'max:255'],
-            'form.permissions' => ['required', 'array', 'min:1'],
             'form.state' => ['required', 'boolean'],
         ];
     }
@@ -78,21 +67,5 @@ class RolesPage extends BaseResourcePage
     protected function statusTabs(): array
     {
         return ['all' => 'Todos', 'active' => 'Activos', 'inactive' => 'Inactivos'];
-    }
-
-    protected function selectOptions(): array
-    {
-        $permissions = data_get(app(RolesApiService::class)->permissionCatalog(), 'data.groups', []);
-
-        return [
-            'permissions' => collect($permissions)
-                ->map(fn ($options, $label) => [
-                    'label' => $label,
-                    'options' => collect($options)->map(fn ($option) => [
-                        'value' => data_get($option, 'key'),
-                        'label' => data_get($option, 'label'),
-                    ])->values()->all(),
-                ])->values()->all(),
-        ];
     }
 }

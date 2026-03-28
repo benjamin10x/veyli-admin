@@ -30,10 +30,12 @@
                     <div>
                         <label class="form-label">Nombre</label>
                         <input class="form-input" type="text" name="name" value="{{ old('name', data_get($apiUser, 'name')) }}" required>
+                        @error('name') <div class="form-hint text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div>
                         <label class="form-label">Correo</label>
                         <input class="form-input" type="email" name="email" value="{{ old('email', data_get($apiUser, 'email')) }}" required>
+                        @error('email') <div class="form-hint text-danger">{{ $message }}</div> @enderror
                     </div>
                 </div>
 
@@ -60,18 +62,22 @@
                     <div>
                         <label class="form-label">Nombre del sistema</label>
                         <input class="form-input" type="text" name="company_name" value="{{ old('company_name', data_get($settingsPayload, 'company_name', 'VEYLI')) }}" required>
+                        @error('company_name') <div class="form-hint text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div>
                         <label class="form-label">Correo de soporte</label>
                         <input class="form-input" type="email" name="support_email" value="{{ old('support_email', data_get($settingsPayload, 'support_email')) }}">
+                        @error('support_email') <div class="form-hint text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div>
                         <label class="form-label">Teléfono de soporte</label>
                         <input class="form-input" type="text" name="support_phone" value="{{ old('support_phone', data_get($settingsPayload, 'support_phone')) }}">
+                        @error('support_phone') <div class="form-hint text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div>
                         <label class="form-label">Tiempo de sesión (minutos)</label>
                         <input class="form-input" type="number" min="15" max="1440" name="session_timeout_minutes" value="{{ old('session_timeout_minutes', data_get($settingsPayload, 'session_timeout_minutes', 60)) }}" required>
+                        @error('session_timeout_minutes') <div class="form-hint text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="resource-form-span">
                         <div class="settings-inline-switches">

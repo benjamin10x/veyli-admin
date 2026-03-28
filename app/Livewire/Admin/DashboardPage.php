@@ -22,6 +22,13 @@ class DashboardPage extends Component
                 'activity_trend' => [],
                 'top_clients' => [],
                 'latest_events' => [],
+                'today_metrics' => [],
+                'activity_insights' => [],
+                'event_type_breakdown' => [],
+                'capacity_breakdown' => [],
+                'operational_health' => [],
+                'attention_metrics' => [],
+                'portfolio_health' => [],
             ]];
         }
 
@@ -33,6 +40,13 @@ class DashboardPage extends Component
             'activityTrend' => data_get($summary, 'data.activity_trend', []),
             'topClients' => data_get($summary, 'data.top_clients', []),
             'latestEvents' => data_get($summary, 'data.latest_events', []),
+            'todayMetrics' => data_get($summary, 'data.today_metrics', []),
+            'activityInsights' => data_get($summary, 'data.activity_insights', []),
+            'eventTypeBreakdown' => data_get($summary, 'data.event_type_breakdown', []),
+            'capacityBreakdown' => data_get($summary, 'data.capacity_breakdown', []),
+            'operationalHealth' => data_get($summary, 'data.operational_health', []),
+            'attentionMetrics' => data_get($summary, 'data.attention_metrics', []),
+            'portfolioHealth' => data_get($summary, 'data.portfolio_health', []),
         ]);
     }
 }

@@ -48,12 +48,12 @@ class ClientsPage extends BaseResourcePage
     protected function rules(): array
     {
         return [
-            'form.first_name' => ['required', 'string', 'max:100'],
-            'form.last_name' => ['required', 'string', 'max:100'],
+            'form.first_name' => ['required', 'string', 'min:2', 'max:100'],
+            'form.last_name' => ['required', 'string', 'min:2', 'max:100'],
             'form.email' => ['required', 'email'],
             'form.phone' => ['nullable', 'string', 'max:30'],
             'form.address' => ['nullable', 'string', 'max:255'],
-            'form.password' => [$this->editing ? 'nullable' : 'required', 'string', 'min:8'],
+            'form.password' => [$this->editing ? 'nullable' : 'required', 'string', 'min:8', 'max:128'],
             'form.state' => ['required', 'in:active,inactive'],
         ];
     }

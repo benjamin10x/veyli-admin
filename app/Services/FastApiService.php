@@ -108,10 +108,40 @@ class FastApiService
             }
 
             $location = $error['loc'] ?? ['api'];
-            $field = is_array($location) ? end($location) : 'api';
-            $errors[$field][] = $error['msg'] ?? 'Validación inválida.';
+            $message = (string) ($error['msg'] ?? 'Validación inválida.');
+            $field = $this->resolveValidationField($location, $message);
+            $errors[$field][] = $message;
         }
 
         return $errors ?: ['api' => ['Validación fallida.']];
+    }
+
+    protected function resolveValidationField(mixed $location, string $message): string
+    {
+        if (is_array($location)) {
+            $segments = array_reverse($location);
+
+            foreach ($segments as $segment) {
+                if (is_string($segment) && ! in_array($segment, ['body', 'query', 'path'], true)) {
+                    return $segment;
+                }
+            }
+        }
+
+        return $this->fieldFromMessage($message) ?? 'api';
+    }
+
+    protected function fieldFromMessage(string $message): ?string
+    {
+        $normalized = mb_strtolower(trim($message));
+
+        return match (true) {
+            str_contains($normalized, 'contraseñas no coinciden') => 'password_confirmation',
+            str_contains($normalized, 'fecha final debe ser igual o posterior') => 'end_date',
+            str_contains($normalized, 'fecha estimada de entrega') => 'estimated_delivery_at',
+            str_contains($normalized, 'tracking'),
+            str_contains($normalized, 'rastreo') => 'tracking_code',
+            default => null,
+        };
     }
 }

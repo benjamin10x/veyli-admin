@@ -44,9 +44,9 @@ class VehiclesPage extends BaseResourcePage
     protected function rules(): array
     {
         return [
-            'form.plates' => ['required', 'string', 'max:20'],
-            'form.vehicle_type' => ['required', 'string', 'max:80'],
-            'form.capacity' => ['required', 'numeric', 'min:1'],
+            'form.plates' => ['required', 'string', 'min:3', 'max:20'],
+            'form.vehicle_type' => ['required', 'string', 'min:2', 'max:80'],
+            'form.capacity' => ['required', 'numeric', 'min:0.01'],
             'form.operational_status' => ['required', 'in:available,active,maintenance,inactive'],
         ];
     }

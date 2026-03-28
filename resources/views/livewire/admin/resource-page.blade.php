@@ -68,6 +68,19 @@
                             <td>
                                 @if (($column['type'] ?? null) === 'badge')
                                     <span class="{{ $this->stateBadgeClass((string) $value) }}" style="{{ $this->badgeStyle($item, $column) }}">{{ $value ?: '—' }}</span>
+                                @elseif (($column['type'] ?? null) === 'list')
+                                    @php($listItems = $this->listItems($value, 3, $column['key']))
+                                    <div class="list-chip-stack">
+                                        @forelse ($listItems as $listItem)
+                                            <span class="list-chip" title="{{ $listItem['value'] }}">{{ $listItem['label'] }}</span>
+                                        @empty
+                                            <span class="list-chip list-chip-empty">—</span>
+                                        @endforelse
+
+                                        @if ($this->listOverflowCount($value, 3) > 0)
+                                            <span class="list-chip list-chip-muted">+{{ $this->listOverflowCount($value, 3) }}</span>
+                                        @endif
+                                    </div>
                                 @elseif (($column['type'] ?? null) === 'color')
                                     <div class="color-chip-wrap">
                                         <span class="color-chip" style="background-color: {{ $value ?: '#9ca3af' }};"></span>
@@ -86,7 +99,7 @@
                                     </svg>
                                 </button>
 
-                                <button type="button" class="action-btn edit" wire:click="openEdit({{ data_get($item, 'id') }})" onclick="return confirm('¿Quieres editar este registro?')" title="Editar registro" aria-label="Editar registro">
+                                <button type="button" class="action-btn edit" wire:click="openEdit({{ data_get($item, 'id') }})" wire:confirm="¿Quieres editar este registro?" title="Editar registro" aria-label="Editar registro">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M12 20h9"></path>
                                         <path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"></path>
@@ -98,7 +111,7 @@
                                         type="button"
                                         class="table-switch {{ data_get($item, 'state') === 'active' ? 'on' : 'off' }}"
                                         wire:click="changeStatus({{ data_get($item, 'id') }}, '{{ data_get($item, 'state') }}')"
-                                        onclick="return confirm('¿Quieres {{ data_get($item, 'state') === 'active' ? 'inactivar' : 'activar' }} este registro?')"
+                                        wire:confirm="¿Quieres {{ data_get($item, 'state') === 'active' ? 'inactivar' : 'activar' }} este registro?"
                                         title="{{ data_get($item, 'state') === 'active' ? 'Desactivar' : 'Activar' }}"
                                         aria-label="{{ data_get($item, 'state') === 'active' ? 'Desactivar' : 'Activar' }}"
                                     >
@@ -166,7 +179,7 @@
                     </button>
                 </div>
 
-                <form wire:submit.prevent="save" onsubmit="return confirm('¿Deseas guardar este cambio?')">
+                <form wire:submit.prevent="save" wire:confirm="¿Deseas guardar este cambio?">
                     <div class="resource-form-grid">
                         @foreach ($fields as $field)
                             @if (!(($field['create_only'] ?? false) && $editing))
@@ -261,6 +274,15 @@
                                 @php($value = data_get($detailRecord, $column['key']))
                                 @if (($column['type'] ?? null) === 'badge')
                                     <span class="{{ $this->stateBadgeClass((string) $value) }}" style="{{ $this->badgeStyle($detailRecord, $column) }}">{{ $value ?: '—' }}</span>
+                                @elseif (($column['type'] ?? null) === 'list')
+                                    @php($listItems = $this->listItems($value, null, $column['key']))
+                                    <div class="list-chip-stack detail">
+                                        @forelse ($listItems as $listItem)
+                                            <span class="list-chip" title="{{ $listItem['value'] }}">{{ $listItem['label'] }}</span>
+                                        @empty
+                                            <span class="list-chip list-chip-empty">—</span>
+                                        @endforelse
+                                    </div>
                                 @elseif (($column['type'] ?? null) === 'color')
                                     <div class="color-chip-wrap">
                                         <span class="color-chip color-chip-lg" style="background-color: {{ $value ?: '#9ca3af' }};"></span>

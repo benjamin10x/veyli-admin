@@ -48,12 +48,12 @@ class DriversPage extends BaseResourcePage
     protected function rules(): array
     {
         return [
-            'form.identification' => ['required', 'string', 'max:50'],
-            'form.name' => ['required', 'string', 'max:150'],
+            'form.identification' => ['required', 'string', 'min:3', 'max:50'],
+            'form.name' => ['required', 'string', 'min:2', 'max:150'],
             'form.phone' => ['nullable', 'string', 'max:30'],
             'form.shift' => ['required', 'in:Matutino,Vespertino,Nocturno,Mixto'],
-            'form.license_number' => ['required', 'string', 'max:100'],
-            'form.hired_at' => ['nullable', 'date'],
+            'form.license_number' => ['required', 'string', 'min:3', 'max:100'],
+            'form.hired_at' => ['nullable', 'date', 'before_or_equal:today'],
             'form.employment_status' => ['required', 'in:active,inactive,on_leave'],
         ];
     }

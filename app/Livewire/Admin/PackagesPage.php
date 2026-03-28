@@ -51,15 +51,21 @@ class PackagesPage extends BaseResourcePage
 
     protected function rules(): array
     {
+        $estimatedDeliveryRules = ['nullable', 'date'];
+
+        if (! $this->editing) {
+            $estimatedDeliveryRules[] = 'after_or_equal:today';
+        }
+
         return [
             'form.client_id' => ['required', 'integer'],
-            'form.description' => ['required', 'string', 'max:255'],
-            'form.weight' => ['required', 'numeric', 'min:0.1'],
+            'form.description' => ['required', 'string', 'min:3', 'max:255'],
+            'form.weight' => ['required', 'numeric', 'min:0.01'],
             'form.volume' => ['nullable', 'numeric', 'min:0.01'],
-            'form.package_type' => ['required', 'string', 'max:100'],
-            'form.origin_address' => ['required', 'string', 'max:255'],
-            'form.destination_address' => ['required', 'string', 'max:255'],
-            'form.estimated_delivery_at' => ['nullable'],
+            'form.package_type' => ['required', 'string', 'min:2', 'max:100'],
+            'form.origin_address' => ['required', 'string', 'min:3', 'max:255'],
+            'form.destination_address' => ['required', 'string', 'min:3', 'max:255'],
+            'form.estimated_delivery_at' => $estimatedDeliveryRules,
             'form.package_status_id' => ['nullable', 'integer'],
         ];
     }

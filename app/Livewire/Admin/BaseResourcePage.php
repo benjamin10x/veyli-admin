@@ -4,10 +4,13 @@ namespace App\Livewire\Admin;
 
 use App\Exceptions\ApiException;
 use App\Exceptions\ApiValidationException;
+use App\Support\ProvidesValidation;
 use Livewire\Component;
 
 abstract class BaseResourcePage extends Component
 {
+    use ProvidesValidation;
+
     public string $search = '';
     public string $status = 'all';
     public int $page = 1;
@@ -96,7 +99,7 @@ abstract class BaseResourcePage extends Component
 
     public function save(): void
     {
-        $this->validate($this->rules());
+        $this->validate($this->rules(), $this->validationMessages(), $this->formValidationAttributes());
         $payload = $this->normalizePayload($this->form);
 
         try {
@@ -281,6 +284,48 @@ abstract class BaseResourcePage extends Component
         }
 
         return $payload;
+    }
+
+    protected function formValidationAttributes(): array
+    {
+        $attributes = [];
+
+        foreach ($this->fields() as $field) {
+            $attributes['form.'.$field['key']] = $field['label'] ?? $field['key'];
+        }
+
+        return $this->validationAttributes($attributes);
+    }
+
+    public function listItems(mixed $value, ?int $limit = null, string $columnKey = ''): array
+    {
+        $items = collect(is_array($value) ? $value : [$value])
+            ->filter(fn (mixed $item) => filled($item))
+            ->map(fn (mixed $item) => [
+                'value' => (string) $item,
+                'label' => $this->listItemLabel((string) $item, $columnKey),
+            ])
+            ->values();
+
+        if ($limit !== null) {
+            $items = $items->take($limit);
+        }
+
+        return $items->all();
+    }
+
+    public function listOverflowCount(mixed $value, int $limit = 3): int
+    {
+        $total = collect(is_array($value) ? $value : [$value])
+            ->filter(fn (mixed $item) => filled($item))
+            ->count();
+
+        return max(0, $total - $limit);
+    }
+
+    protected function listItemLabel(string $item, string $columnKey = ''): string
+    {
+        return $item;
     }
 
     public function formatCell(mixed $value, string $type = 'text'): string

@@ -22,10 +22,17 @@ class LoginController extends Controller
 
     public function login(Request $request, AuthApiService $auth)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required', 'string'],
-        ]);
+        $credentials = $request->validate(
+            [
+                'email' => ['required', 'email'],
+                'password' => ['required', 'string'],
+            ],
+            $this->validationMessages(),
+            $this->validationAttributes([
+                'email' => 'Correo electrónico',
+                'password' => 'Contraseña',
+            ]),
+        );
 
         try {
             $response = $auth->login($credentials['email'], $credentials['password']);
@@ -63,11 +70,19 @@ class LoginController extends Controller
 
     public function register(Request $request, AuthApiService $auth)
     {
-        $payload = $request->validate([
-            'name' => ['required', 'string', 'max:150'],
-            'email' => ['required', 'email'],
-            'password' => ['required', 'confirmed', Password::min(8)],
-        ]);
+        $payload = $request->validate(
+            [
+                'name' => ['required', 'string', 'min:2', 'max:150'],
+                'email' => ['required', 'email'],
+                'password' => ['required', 'confirmed', Password::min(8)],
+            ],
+            $this->validationMessages(),
+            $this->validationAttributes([
+                'name' => 'Nombre',
+                'email' => 'Correo electrónico',
+                'password' => 'Contraseña',
+            ]),
+        );
 
         $segments = preg_split('/\s+/', trim($payload['name']), 2) ?: [];
         $firstName = $segments[0] ?? 'Cliente';
